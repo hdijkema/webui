@@ -291,6 +291,7 @@ void _webui_macos_wv_process() {
     #ifdef WEBUI_LOG
     // printf("[ObjC]\t\t\t_webui_macos_wv_process()\n");
     #endif
+
     NSApplication *app = [NSApplication sharedApplication];
     NSEvent *event;
 
@@ -301,6 +302,7 @@ void _webui_macos_wv_process() {
                         dequeue:YES])) {
         [app sendEvent:event];
     }
+
 }
 
 void _webui_macos_wv_stop() {

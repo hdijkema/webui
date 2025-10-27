@@ -2817,6 +2817,11 @@ void* webui_win32_get_hwnd(size_t window) {
     return NULL;
 }
 
+#ifdef __APPLE__
+void *_webui_get_ns_window(int index);
+#endif
+
+
 void* webui_get_hwnd(size_t window) {
 
     #ifdef WEBUI_LOG
@@ -2845,6 +2850,18 @@ void* webui_get_hwnd(size_t window) {
 
     #else
     // macOS
+
+    // Dereference
+    if (_webui_mutex_app_is_exit_now(WEBUI_MUTEX_GET_STATUS) || _webui.wins[window] == NULL)
+        return NULL;
+    _webui_window_t* win = _webui.wins[window];
+
+    if (_webui.is_webview) {
+        if (win->webView) {
+            return _webui_get_ns_window(win->webView->index);
+        }
+    }
+
     return NULL; // TODO: Return window handler
     #endif
 }

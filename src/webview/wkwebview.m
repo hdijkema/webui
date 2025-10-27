@@ -232,6 +232,12 @@ void _webui_macos_wv_new_thread_safe(int index, bool frameless, bool resizable) 
     });
 }
 
+void *_webui_get_ns_window(int index)
+{
+  NSWindow *window = [delegate windowAtIndex:index];
+  return window;
+}
+
 bool _webui_macos_wv_show(int index, const char* urlString, int x, int y, int width, int height) {
     #ifdef WEBUI_LOG
     printf("[ObjC]\t\t\t_webui_macos_wv_show([%d])\n", index);
@@ -288,21 +294,22 @@ bool _webui_macos_wv_show(int index, const char* urlString, int x, int y, int wi
 }
 
 void _webui_macos_wv_process() {
-    #ifdef WEBUI_LOG
-    // printf("[ObjC]\t\t\t_webui_macos_wv_process()\n");
-    #endif
+    if ([NSThread isMainThread]) {
+      #ifdef WEBUI_LOG
+      // printf("[ObjC]\t\t\t_webui_macos_wv_process()\n");
+      #endif
 
-    NSApplication *app = [NSApplication sharedApplication];
-    NSEvent *event;
+      NSApplication *app = [NSApplication sharedApplication];
+      NSEvent *event;
 
-    // Process all pending events
-    while ((event = [app nextEventMatchingMask:NSEventMaskAny
-                        untilDate:[NSDate distantPast]
-                        inMode:NSDefaultRunLoopMode
-                        dequeue:YES])) {
-        [app sendEvent:event];
+      // Process all pending events
+      while ((event = [app nextEventMatchingMask:NSEventMaskAny
+                          untilDate:[NSDate distantPast]
+                          inMode:NSDefaultRunLoopMode
+                          dequeue:YES])) {
+          [app sendEvent:event];
+      }
     }
-
 }
 
 void _webui_macos_wv_stop() {

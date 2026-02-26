@@ -9272,16 +9272,21 @@ static bool _webui_get_cb_index(_webui_window_t* win, const char* element, size_
     return false;
 }
 
+//#define DETAIL_LOG
+
 #ifdef WEBUI_LOG
 static void _webui_print_hex(const char* data, size_t len) {
+#ifdef DETAIL_LOG
     for (size_t i = 0; i < len; i++) {
         _webui_log_debug("0x%02X ", (unsigned char)* data);
         data++;
     }
+#endif
 }
 static void _webui_print_ascii(const char* data, size_t len) {
     // This function is used to print the protocol binary packets. the packet 
     // may have ASCII and `0x00` inside text, as well as other non-ascii bytes
+#ifdef DETAIL_LOG
     for (size_t i = 0; i < len; i++) {
         register unsigned char c = (unsigned char)* data;
         if (c < 32 || c > 126) {
@@ -9291,6 +9296,7 @@ static void _webui_print_ascii(const char* data, size_t len) {
         }
         data++;
     }
+#endif
 }
 #endif
 
